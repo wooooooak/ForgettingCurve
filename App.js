@@ -1,11 +1,38 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, Text, Button } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 
+import LoginScreen from './screens/LoginScreen';
+
 export default class App extends React.Component {
 	state = {
-		isLoadingComplete: false
+		isLoadingComplete: false,
+		signedIn: false,
+		name: '',
+		photoUrl: ''
+	};
+
+	signIn = async () => {
+		try {
+			const result = await Expo.Google.logInAsync({
+				androidClientId:
+					'587052644534-n336sts1anjlg59ka3nb9gfnuils27h3.apps.googleusercontent.com',
+				//iosClientId: YOUR_CLIENT_ID_HERE,  <-- if you use iOS
+				scopes: [ 'profile', 'email' ]
+			});
+			if (result.type === 'success') {
+				this.setState({
+					signedIn: true,
+					name: result.user.name,
+					photoUrl: result.user.photoUrl
+				});
+			} else {
+				console.log('cancelled');
+			}
+		} catch (e) {
+			console.log('error', e);
+		}
 	};
 
 	render() {
@@ -18,11 +45,13 @@ export default class App extends React.Component {
 				/>
 			);
 		} else {
-			return (
+			return this.state.signedIn ? (
 				<View style={styles.container}>
 					{Platform.OS === 'ios' && <StatusBar barStyle="default" />}
 					<AppNavigator />
 				</View>
+			) : (
+				<LoginScreen signIn={this.signIn} />
 			);
 		}
 	}
