@@ -1,202 +1,132 @@
 import React from 'react';
-import { Image, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { WebBrowser } from 'expo';
-import Button from 'antd-mobile-rn/lib/button';
+import styled from 'styled-components/native';
+import { Animated, Text, View, TextInput } from 'react-native';
+import {
+	ScreenTitleWapper,
+	ScreenTitle,
+	ScreenPageWrapper,
+	ScrollViewCustom
+} from './ReviewListScreen';
 
-import { MonoText } from '../components/StyledText';
+import { Button } from 'antd-mobile-rn';
+
+const InputCategory = styled(TextInput)`
+	width: 90%;
+	margin: 10px auto 0;
+	height: 70px;
+	padding: 20px;
+	font-size: 20px;
+	background-color: #D499B9;
+`;
+
+const InputRange = styled(TextInput)`
+	width: 90%;
+	margin: 0 auto;
+	height: 70px;
+	padding: 20px;
+	background-color: #9055A2;
+	font-size: 20px;
+	opacity: 0;
+`;
+
+const SubmitButton = styled(Button)`
+	opacity: 1;
+	/* margin-top: 5px;
+	margin: 5px auto 0px;
+	width: 150px;
+	height: 40px;
+	font-size: 20px; */
+`;
+
+const AInputRange = Animated.createAnimatedComponent(InputRange);
+const ASubmitButton = Animated.createAnimatedComponent(SubmitButton);
 
 export default class HomeScreen extends React.Component {
 	static navigationOptions = {
 		header: null
 	};
-
-	render() {
-		return (
-			<View style={styles.container}>
-				<ScrollView
-					style={styles.container}
-					contentContainerStyle={styles.contentContainer}
-				>
-					<View style={styles.welcomeContainer}>
-						<Image
-							source={
-								__DEV__ ? (
-									require('../assets/images/robot-dev.png')
-								) : (
-									require('../assets/images/robot-prod.png')
-								)
-							}
-							style={styles.welcomeImage}
-						/>
-					</View>
-					<Button
-						style={{ width: '50%' }}
-						onClick={() => this.props.navigation.navigate('ReviewList')}
-						type={'primary'}
-					>
-						go to review list page
-					</Button>
-
-					<View style={styles.getStartedContainer}>
-						{this._maybeRenderDevelopmentModeWarning()}
-
-						<View
-							style={[
-								styles.codeHighlightContainer,
-								styles.homeScreenFilename
-							]}
-						>
-							<MonoText style={styles.codeHighlightText}>
-								screens/HomeScreen.js
-							</MonoText>
-						</View>
-					</View>
-				</ScrollView>
-
-				<View style={styles.tabBarInfoContainer}>
-					<Text style={styles.tabBarInfoText}>
-						This is a tab bar. You can edit it in:
-					</Text>
-
-					<View
-						style={[
-							styles.codeHighlightContainer,
-							styles.navigationFilename
-						]}
-					>
-						<MonoText style={styles.codeHighlightText}>
-							navigation/MainTabNavigator.js
-						</MonoText>
-					</View>
-				</View>
-			</View>
-		);
-	}
-
-	_maybeRenderDevelopmentModeWarning() {
-		if (__DEV__) {
-			const learnMoreButton = (
-				<Text
-					onPress={this._handleLearnMorePress}
-					style={styles.helpLinkText}
-				>
-					Learn more
-				</Text>
-			);
-
-			return (
-				<Text style={styles.developmentModeText}>
-					Development mode is enabled, your app will be slower but you can
-					use useful development tools. {learnMoreButton}
-				</Text>
-			);
-		} else {
-			return (
-				<Text style={styles.developmentModeText}>
-					You are not in development mode, your app will run at full speed.
-				</Text>
-			);
-		}
-	}
-
-	_handleLearnMorePress = () => {
-		WebBrowser.openBrowserAsync(
-			'https://docs.expo.io/versions/latest/guides/development-mode'
-		);
+	submitButton = null;
+	state = {
+		fadeAnimRange: new Animated.Value(0),
+		fadeAnimButton: new Animated.Value(0),
+		category: '',
+		range: ''
 	};
 
-	_handleHelpPress = () => {
-		WebBrowser.openBrowserAsync(
-			'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-		);
-	};
-}
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#fff'
-	},
-	developmentModeText: {
-		marginBottom: 20,
-		color: 'rgba(0,0,0,0.4)',
-		fontSize: 14,
-		lineHeight: 19,
-		textAlign: 'center'
-	},
-	contentContainer: {
-		paddingTop: 30
-	},
-	welcomeContainer: {
-		alignItems: 'center',
-		marginTop: 10,
-		marginBottom: 20
-	},
-	welcomeImage: {
-		width: 100,
-		height: 80,
-		resizeMode: 'contain',
-		marginTop: 3,
-		marginLeft: -10
-	},
-	getStartedContainer: {
-		alignItems: 'center',
-		marginHorizontal: 50
-	},
-	homeScreenFilename: {
-		marginVertical: 7
-	},
-	codeHighlightText: {
-		color: 'rgba(96,100,109, 0.8)'
-	},
-	codeHighlightContainer: {
-		backgroundColor: 'rgba(0,0,0,0.05)',
-		borderRadius: 3,
-		paddingHorizontal: 4
-	},
-	getStartedText: {
-		fontSize: 17,
-		color: 'rgba(96,100,109, 1)',
-		lineHeight: 24,
-		textAlign: 'center'
-	},
-	tabBarInfoContainer: {
-		position: 'absolute',
-		bottom: 0,
-		left: 0,
-		right: 0,
-		...Platform.select({
-			ios: {
-				shadowColor: 'black',
-				shadowOffset: { height: -3 },
-				shadowOpacity: 0.1,
-				shadowRadius: 3
-			},
-			android: {
-				elevation: 20
+	onChangeCategory = (text) => {
+		Animated.timing(
+			// Animate over time
+			this.state.fadeAnimRange, // The animated value to drive
+			{
+				toValue: 1, // Animate to opacity: 1 (opaque)
+				duration: 700 // Make it take a while
 			}
-		}),
-		alignItems: 'center',
-		backgroundColor: '#fbfbfb',
-		paddingVertical: 20
-	},
-	tabBarInfoText: {
-		fontSize: 17,
-		color: 'rgba(96,100,109, 1)',
-		textAlign: 'center'
-	},
-	navigationFilename: {
-		marginTop: 5
-	},
-	helpContainer: {
-		marginTop: 15,
-		alignItems: 'center'
-	},
-	helpLink: {
-		paddingVertical: 15
-	},
-	helpLinkText: {
-		fontSize: 14,
-		color: '#2e78b7'
+		).start();
+		this.setState({
+			category: text
+		});
+	};
+
+	onChangeRange = (text) => {
+		Animated.timing(
+			// Animate over time
+			this.state.fadeAnimButton, // The animated value to drive
+			{
+				toValue: 1, // Animate to opacity: 1 (opaque)
+				duration: 700 // Make it take a while
+			}
+		).start();
+		this.setState({
+			range: text
+		});
+	};
+
+	onClickSubmitButton = () => {
+		console.log(this.state);
+	};
+	render() {
+		const { fadeAnimRange, fadeAnimButton, category, range } = this.state;
+		return (
+			<ScreenPageWrapper style={{ width: '100%' }}>
+				<ScreenTitleWapper>
+					<ScreenTitle>오늘 한 공부</ScreenTitle>
+				</ScreenTitleWapper>
+				<InputCategory
+					placeholder="어떤 과목을 공부하셨나요?"
+					autoFocus={true}
+					onChangeText={this.onChangeCategory}
+				/>
+				{category.length > 0 ? (
+					<AInputRange
+						style={{ opacity: fadeAnimRange }}
+						onChangeText={this.onChangeRange}
+						placeholder="어디서부터 어디까지 공부하셨죠?"
+						multiline={true}
+					/>
+				) : null}
+				{range.length > 0 ? (
+					<ASubmitButton
+						type={'default'}
+						// style={{ opacity: fadeAnimButton }}
+						onClick={this.onClickSubmitButton}
+					>
+						확인
+					</ASubmitButton>
+				) : null}
+				<View>
+					<Text>asdfadsfdsaf</Text>
+				</View>
+				<View>
+					<Text>asdfadsfdsaf</Text>
+				</View>
+				<View>
+					<Text>asdfadsfdsaf</Text>
+				</View>
+				<View>
+					<Text>asdfadsfdsaf</Text>
+				</View>
+				<ScrollViewCustom />
+			</ScreenPageWrapper>
+		);
 	}
-});
+}

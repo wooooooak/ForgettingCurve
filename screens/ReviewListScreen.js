@@ -5,28 +5,28 @@ import { Card } from 'antd-mobile-rn';
 import Swipeout from 'react-native-swipeout';
 import { Ionicons } from '@expo/vector-icons';
 
-const ScreenPageWrapper = styled(View)`
+export const ScreenPageWrapper = styled(View)`
 	flex: 1;
 	padding-top: 35px;
-	background-color: white;
+	background-color: ${(props) =>
+		props.backgroundColor ? props.backgroundColor : 'white'};
 `;
 
-const ScrollViewCustom = styled(ScrollView)`
+export const ScrollViewCustom = styled(ScrollView)`
 	flex: 1;
 	padding-top: 35px;
-
 	background-color: white;
 	backface-visibility: hidden;
 `;
 
-const ScreenTitleWapper = styled.View`
+export const ScreenTitleWapper = styled.View`
 	padding: 10px 0;
 	background-color: white;
 	height: 62px;
 	width: 100%;
 `;
 
-const ScreenTitle = styled.Text`
+export const ScreenTitle = styled.Text`
 	font-size: 25px;
 	color: black;
 	font-family: 'noto-sans-kr-bold';

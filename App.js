@@ -51,7 +51,11 @@ export default class App extends React.Component {
 					<AppNavigator />
 				</View>
 			) : (
-				<LoginScreen signIn={this.signIn} />
+				<View style={styles.container}>
+					{Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+					<AppNavigator />
+				</View>
+				// <LoginScreen signIn={this.signIn} />
 			);
 		}
 	}
