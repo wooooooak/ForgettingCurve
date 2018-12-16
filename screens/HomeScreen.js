@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { Animated, Text, View, TextInput } from 'react-native';
+import { Animated, Text, View, TextInput, FlatList } from 'react-native';
 import {
 	ScreenTitleWapper,
 	ScreenTitle,
@@ -9,6 +9,8 @@ import {
 } from './ReviewListScreen';
 
 import { Button } from 'antd-mobile-rn';
+import TodayStudy from '../components/TodayStudy';
+import Divider from '../components/Divider';
 
 const InputCategory = styled(TextInput)`
 	width: 90%;
@@ -50,8 +52,14 @@ export default class HomeScreen extends React.Component {
 		fadeAnimRange: new Animated.Value(0),
 		fadeAnimButton: new Animated.Value(0),
 		category: '',
-		range: ''
+		range: '',
+		dataList: [
+			{ title: '영어', content: 'chatper 3~4', id: '2134123' },
+			{ title: '수학', content: 'chatper 3~4', id: '2132124' }
+		]
 	};
+
+	_keyExtractor = (item, index) => item.id;
 
 	onChangeCategory = (text) => {
 		Animated.timing(
@@ -83,6 +91,11 @@ export default class HomeScreen extends React.Component {
 
 	onClickSubmitButton = () => {
 		console.log(this.state);
+		this.setState({
+			...this.state,
+			category: '',
+			range: ''
+		});
 	};
 	render() {
 		const { fadeAnimRange, fadeAnimButton, category, range } = this.state;
@@ -107,25 +120,22 @@ export default class HomeScreen extends React.Component {
 				{range.length > 0 ? (
 					<ASubmitButton
 						type={'default'}
-						// style={{ opacity: fadeAnimButton }}
+						style={{ opacity: fadeAnimButton }}
 						onClick={this.onClickSubmitButton}
 					>
 						확인
 					</ASubmitButton>
 				) : null}
-				<View>
-					<Text>asdfadsfdsaf</Text>
-				</View>
-				<View>
-					<Text>asdfadsfdsaf</Text>
-				</View>
-				<View>
-					<Text>asdfadsfdsaf</Text>
-				</View>
-				<View>
-					<Text>asdfadsfdsaf</Text>
-				</View>
-				<ScrollViewCustom />
+				<Divider />
+				<FlatList
+					data={this.state.dataList}
+					renderItem={({ item }) => (
+						<TodayStudy title={item.title} content={item.content}>
+							{item.id}
+						</TodayStudy>
+					)}
+					keyExtractor={this._keyExtractor}
+				/>
 			</ScreenPageWrapper>
 		);
 	}
