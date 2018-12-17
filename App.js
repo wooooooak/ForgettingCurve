@@ -2,15 +2,18 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View, Text, Button } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 import LoginScreen from './screens/LoginScreen';
+import API from './API';
+
+import { store, persistor } from './store';
+import { login } from './redux/user';
 
 export default class App extends React.Component {
 	state = {
-		isLoadingComplete: false,
-		signedIn: false,
-		name: '',
-		photoUrl: ''
+		isLoadingComplete: false
 	};
 
 	signIn = async () => {
@@ -22,10 +25,14 @@ export default class App extends React.Component {
 				scopes: [ 'profile', 'email' ]
 			});
 			if (result.type === 'success') {
+				const { data } = await API.post(`auth`, {
+					name: this.state.name,
+					photoUrl: this.state.photoUrl
+				});
+				console.log(data);
+				store.dispatch(login({ id: 'asf', username: 'sdf' }));
 				this.setState({
-					signedIn: true,
-					name: result.user.name,
-					photoUrl: result.user.photoUrl
+					...this.state
 				});
 			} else {
 				console.log('cancelled');
@@ -36,6 +43,8 @@ export default class App extends React.Component {
 	};
 
 	render() {
+		// persistor.purge();
+		console.log('aheheheheheheh');
 		if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
 			return (
 				<AppLoading
@@ -45,17 +54,27 @@ export default class App extends React.Component {
 				/>
 			);
 		} else {
-			return this.state.signedIn ? (
-				<View style={styles.container}>
-					{Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-					<AppNavigator />
-				</View>
+			return store.getState().user.id ? (
+				<Provider store={store}>
+					<PersistGate persistor={persistor}>
+						<View style={styles.container}>
+							{Platform.OS === 'ios' && (
+								<StatusBar barStyle="default" />
+							)}
+							<AppNavigator />
+						</View>
+					</PersistGate>
+				</Provider>
 			) : (
-				<View style={styles.container}>
-					{Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-					<AppNavigator />
-				</View>
-				// <LoginScreen signIn={this.signIn} />
+				// <View style={styles.container}>
+				// 	{Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+				// 	<AppNavigator />
+				// </View>
+				<Provider store={store}>
+					<PersistGate persistor={persistor}>
+						<LoginScreen signIn={this.signIn} />
+					</PersistGate>
+				</Provider>
 			);
 		}
 	}

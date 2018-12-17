@@ -1,0 +1,8 @@
+POST http://13.125.192.2:3000/auth/
+content-type: application/json
+
+{
+    "email": "wooooooak@gmail.com",
+    "name" : "leeyongjun"
+}
+
