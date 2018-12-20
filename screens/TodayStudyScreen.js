@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { Animated, Text, View, TextInput, FlatList } from 'react-native';
+import { connect } from 'react-redux';
 import {
 	ScreenTitleWapper,
 	ScreenTitle,
@@ -11,6 +12,8 @@ import {
 import { Button } from 'antd-mobile-rn';
 import TodayStudy from '../components/TodayStudy';
 import Divider from '../components/Divider';
+
+import API from '../API';
 
 const InputCategory = styled(TextInput)`
 	width: 90%;
@@ -33,6 +36,10 @@ const InputRange = styled(TextInput)`
 
 const SubmitButton = styled(Button)`
 	opacity: 1;
+	width: 90%;
+	margin: 0 auto;
+	font-size: 20px;
+	font-family: 'noto-sans-kr-bold'
 	/* margin-top: 5px;
 	margin: 5px auto 0px;
 	width: 150px;
@@ -43,7 +50,7 @@ const SubmitButton = styled(Button)`
 const AInputRange = Animated.createAnimatedComponent(InputRange);
 const ASubmitButton = Animated.createAnimatedComponent(SubmitButton);
 
-export default class HomeScreen extends React.Component {
+class TodayStudyScreen extends React.Component {
 	static navigationOptions = {
 		header: null
 	};
@@ -59,7 +66,23 @@ export default class HomeScreen extends React.Component {
 		]
 	};
 
-	_keyExtractor = (item, index) => item.id;
+	async componentDidMount() {
+		try {
+			const { data } = await API.get(`study/todayStudies`, {
+				headers: {
+					'auth-header': this.props.user.token
+				}
+			});
+			this.setState({
+				...this.state,
+				dataList: data
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	_keyExtractor = (item, index) => item.id.toString();
 
 	onChangeCategory = (text) => {
 		Animated.timing(
@@ -89,25 +112,49 @@ export default class HomeScreen extends React.Component {
 		});
 	};
 
-	onClickSubmitButton = () => {
-		console.log(this.state);
-		this.setState({
-			...this.state,
-			category: '',
-			range: ''
-		});
+	onClickSubmitButton = async () => {
+		try {
+			const { data } = await API.post(
+				`study`,
+				{
+					title: this.state.category,
+					content: this.state.range
+				},
+				{
+					headers: {
+						'auth-header': this.props.user.token
+					}
+				}
+			);
+			const newArr = this.state.dataList;
+			newArr.push({
+				title: data.title,
+				content: data.content,
+				id: data.id
+			});
+			console.log(data);
+			this.setState({
+				...this.state,
+				category: '',
+				range: '',
+				dataList: newArr
+			});
+		} catch (error) {
+			console.log(error);
+		}
 	};
 	render() {
 		const { fadeAnimRange, fadeAnimButton, category, range } = this.state;
 		return (
-			<ScreenPageWrapper style={{ width: '100%' }}>
+			<ScreenPageWrapper>
 				<ScreenTitleWapper>
 					<ScreenTitle>오늘 한 공부</ScreenTitle>
 				</ScreenTitleWapper>
 				<InputCategory
 					placeholder="어떤 과목을 공부하셨나요?"
-					autoFocus={true}
+					autoFocus={false}
 					onChangeText={this.onChangeCategory}
+					value={category}
 				/>
 				{category.length > 0 ? (
 					<AInputRange
@@ -115,6 +162,7 @@ export default class HomeScreen extends React.Component {
 						onChangeText={this.onChangeRange}
 						placeholder="어디서부터 어디까지 공부하셨죠?"
 						multiline={true}
+						value={range}
 					/>
 				) : null}
 				{range.length > 0 ? (
@@ -140,3 +188,11 @@ export default class HomeScreen extends React.Component {
 		);
 	}
 }
+
+const mapStateToProps = (state) => {
+	return {
+		user: state.user
+	};
+};
+
+export default connect(mapStateToProps)(TodayStudyScreen);

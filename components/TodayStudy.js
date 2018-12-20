@@ -2,20 +2,22 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo';
 import styled from 'styled-components/native';
-const boxHeight = 110;
+const boxHeight = 100;
 
 const Box = styled(View)`
-    margin: 5px 0px;
+    margin: 0px auto 10px;
+    width: 97%;
     height: ${boxHeight}px;
     padding: 0 20px;
     font-family: "noto-sans-kr";
-    elevation: 3px;
+    elevation: 5px;
 `;
 const LinearGradientBox = styled(LinearGradient)`
-    margin: 5px 0px;
+    margin: 0px auto 10px;
+    width: 97%;
     height: ${boxHeight}px;
     border-radius: 20;
-    elevation: 3px;
+    elevation: 5px;
 `;
 
 const Title = styled(Text)`
@@ -32,7 +34,7 @@ const TodayStudy = ({ title, content }) => {
 	return (
 		<Box>
 			<LinearGradientBox
-				colors={[ '#74ebd5', '#acb6e5' ]}
+				colors={[ 'white', 'white' ]}
 				start={[ 0, 0 ]}
 				end={[ 1, 1 ]}
 			>

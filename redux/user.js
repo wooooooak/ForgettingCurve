@@ -12,7 +12,8 @@ export const login = (userData) => ({
 });
 
 const initialState = {
-	id: '',
+	token: '',
+	email: '',
 	username: '',
 	photoUrl: ''
 };
@@ -26,7 +27,8 @@ export default (state = initialState, action) => {
 			};
 		case LOGIN:
 			return {
-				id: action.userData.id,
+				token: action.userData.token,
+				email: action.userData.email,
 				username: action.userData.username,
 				photoUrl: action.userData.photoUrl
 			};

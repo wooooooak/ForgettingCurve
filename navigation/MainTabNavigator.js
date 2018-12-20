@@ -1,19 +1,22 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import {
+	createStackNavigator,
+	createBottomTabNavigator
+} from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
+import TodayStudyScreen from '../screens/TodayStudyScreen';
 import ReviewListScreen from '../screens/ReviewListScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 const HomeStack = createStackNavigator({
-	Home: HomeScreen,
+	TodayStudy: TodayStudyScreen,
 	ReviewList: ReviewListScreen
 });
 
 HomeStack.navigationOptions = {
-	tabBarLabel: 'Home',
+	tabBarLabel: '오늘의 공부',
 	tabBarIcon: ({ focused }) => (
 		<TabBarIcon
 			focused={focused}

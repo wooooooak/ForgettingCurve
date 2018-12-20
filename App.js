@@ -1,5 +1,12 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View, Text, Button } from 'react-native';
+import {
+	Platform,
+	StatusBar,
+	StyleSheet,
+	View,
+	Text,
+	Button
+} from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import { Provider } from 'react-redux';
@@ -25,12 +32,19 @@ export default class App extends React.Component {
 				scopes: [ 'profile', 'email' ]
 			});
 			if (result.type === 'success') {
-				const { data } = await API.post(`auth`, {
-					name: this.state.name,
-					photoUrl: this.state.photoUrl
+				const { data } = await API.post(`auth/login`, {
+					email: result.user.email,
+					name: result.user.name,
+					photoUrl: result.user.photoUrl
 				});
-				console.log(data);
-				store.dispatch(login({ id: 'asf', username: 'sdf' }));
+				store.dispatch(
+					login({
+						token: data.token,
+						username: data.user.name,
+						email: data.user.email,
+						photoUrl: data.photoUrl
+					})
+				);
 				this.setState({
 					...this.state
 				});
@@ -44,7 +58,6 @@ export default class App extends React.Component {
 
 	render() {
 		// persistor.purge();
-		console.log('aheheheheheheh');
 		if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
 			return (
 				<AppLoading
@@ -54,7 +67,7 @@ export default class App extends React.Component {
 				/>
 			);
 		} else {
-			return store.getState().user.id ? (
+			return store.getState().user.token ? (
 				<Provider store={store}>
 					<PersistGate persistor={persistor}>
 						<View style={styles.container}>
@@ -113,6 +126,6 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff'
+		backgroundColor: '#f0f5f9'
 	}
 });
