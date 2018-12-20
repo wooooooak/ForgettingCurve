@@ -8,11 +8,11 @@ import {
 import TabBarIcon from '../components/TabBarIcon';
 import TodayStudyScreen from '../screens/TodayStudyScreen';
 import ReviewListScreen from '../screens/ReviewListScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import TimeLineScreen from '../screens/TimeLineScreen';
 
 const HomeStack = createStackNavigator({
 	TodayStudy: TodayStudyScreen,
-	ReviewList: ReviewListScreen
+	TimeLine: TimeLineScreen
 });
 
 HomeStack.navigationOptions = {
@@ -45,12 +45,12 @@ ReviewListStack.navigationOptions = {
 	)
 };
 
-const SettingsStack = createStackNavigator({
-	Settings: SettingsScreen
+const TimeLineStack = createStackNavigator({
+	TimeLine: TimeLineScreen
 });
 
-SettingsStack.navigationOptions = {
-	tabBarLabel: 'Settings',
+TimeLineStack.navigationOptions = {
+	tabBarLabel: '타임라인',
 	tabBarIcon: ({ focused }) => (
 		<TabBarIcon
 			focused={focused}
@@ -62,5 +62,5 @@ SettingsStack.navigationOptions = {
 export default createBottomTabNavigator({
 	ReviewListStack,
 	HomeStack,
-	SettingsStack
+	TimeLineStack
 });
