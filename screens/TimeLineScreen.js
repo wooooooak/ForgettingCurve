@@ -1,8 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import moment from 'moment';
 import { View, RefreshControl, ActivityIndicator, Text } from 'react-native';
 import Timeline from 'react-native-timeline-listview';
+import API from '../API';
 
-export default class TimeLineScreen extends React.Component {
+let dataFormat = {};
+
+class TimeLineScreen extends React.Component {
 	static navigationOptions = {
 		header: null
 	};
@@ -17,95 +22,159 @@ export default class TimeLineScreen extends React.Component {
 		this.data = [
 			{
 				time: '2018-12-20',
-				title: [ '영어 단어', '깃 공부' ],
-				description: [ '챕터 3 공부', '깃 설정 공부' ],
-				lineColor: '#009688'
+				description: [ 'sdfSDr' ],
+				title: [ 'sdfefsdfsdf' ]
 			},
 			{
 				time: '2018-12-20',
-				title: [ '깃 공부' ],
-				description: [ 'a shuttlecock across a net.' ],
-				lineColor: '#009688'
+				description: [ 'sdfSDr' ],
+				title: [ 'sdfefsdfsdf' ]
 			},
 			{
-				time: '2018-12-19',
-				title: [ '영어 단어' ],
-				description: [ '챕터 2 공부', '두 번째 공부' ]
+				time: '2018-12-20',
+				description: [ 'sdfSDr' ],
+				title: [ 'sdfefsdfsdf' ]
+			},
+			{
+				time: '2018-12-20',
+				description: [ 'sdfSDr' ],
+				title: [ 'sdfefsdfsdf' ]
+			},
+			{
+				time: '2018-12-20',
+				description: [ 'sdfSDr' ],
+				title: [ 'sdfefsdfsdf' ]
+			},
+			{
+				time: '2018-12-20',
+				description: [ 'sdfSDr' ],
+				title: [ 'sdfefsdfsdf' ]
+			},
+			{
+				time: '2018-12-20',
+				description: [ 'sdfSDr' ],
+				title: [ 'sdfefsdfsdf' ]
 			}
 		];
 
 		this.state = {
 			isRefreshing: false,
 			waiting: false,
+			offset: 0,
+			isDataRemain: true,
 			data: this.data
 		};
 	}
 
-	onRefresh = () => {
-		console.log('onRefresh~!~!~!~!');
+	convertDataFormat = (data) => {
+		for (let item of data) {
+			console.log(item.createdAt);
+			const date = item.createdAt.slice(0, 10);
+			if (!dataFormat[date]) {
+				dataFormat[date] = {};
+				dataFormat[date].title = [];
+				dataFormat[date].description = [];
+			}
+			dataFormat[date].time = date;
+			dataFormat[date].title.push(item.title);
+			dataFormat[date].description.push(item.content);
+		}
+		const tempDatas = [];
+		for (let item in dataFormat) {
+			const format = {
+				time: '',
+				title: [],
+				description: []
+			};
+			format['time'] = dataFormat[item].time;
+			format['title'] = dataFormat[item].title;
+			format['description'] = dataFormat[item].description;
+			tempDatas.push(format);
+		}
+		dataFormat = {};
+		return this.state.data.concat(tempDatas);
+	};
+
+	async componentDidMount() {
+		try {
+			const { data } = await API.get(`study/all/${this.state.offset}`, {
+				headers: {
+					'auth-header': this.props.user.token
+				}
+			});
+			const toBeAddDatas = this.convertDataFormat(data.stories);
+			this.setState({
+				offset: this.state.offset + 20,
+				data: toBeAddDatas,
+				isDataRemain: data.isDataRemain
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	onRefresh = async () => {
 		this.setState({ isRefreshing: true });
 		//refresh to initial data
-		setTimeout(() => {
-			//refresh to initial data
-			this.setState({
-				data: this.data,
-				isRefreshing: false
+		try {
+			const { data } = await API.get(`study/all/0`, {
+				headers: {
+					'auth-header': this.props.user.token
+				}
 			});
-		}, 2000);
+			const newData = this.convertDataFormat(data.stories);
+			this.setState({
+				data: newData,
+				offset: 20,
+				isRefreshing: false,
+				isDataRemain: data.isDataRemain
+			});
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	renderFooter = () => {
 		if (this.state.waiting) {
 			return <ActivityIndicator />;
 		} else {
-			return <Text>~~</Text>;
+			return (
+				<View style={{ backgroundColor: 'black', height: 100 }}>
+					<Text>this is end</Text>
+					<Text>this is end</Text>
+				</View>
+			);
 		}
 	};
 
-	onEndReached = () => {
-		console.log('onEndeReaCHED~!~!~####');
+	onEndReached = async () => {
+		console.log('on end reach');
+		if (!this.state.isDataRemain) {
+			return;
+		}
 		if (!this.state.waiting) {
 			this.setState({ waiting: true });
-
 			//fetch and concat data
-			setTimeout(() => {
-				//refresh to initial data
-				const data = this.state.data.concat([
+			try {
+				const { data } = await API.get(
+					`study/all/${this.state.offset}`,
 					{
-						time: '2018-12-19',
-						title: [ 'Load more data', '인생 공부' ],
-						description: [
-							'append event at bottom of timeline',
-							'인생 공부했음'
-						]
-					},
-					{
-						time: '2018-12-19',
-						title: [ 'Load more data' ],
-						description: [ 'append event at bottom of timeline' ]
-					},
-					{
-						time: '2018-12-19',
-						title: [ 'Load more data' ],
-						description: [ 'append event at bottom of timeline' ]
-					},
-					{
-						time: '2018-12-18',
-						title: [ 'Load more data' ],
-						description: [ 'append event at bottom of timeline' ]
-					},
-					{
-						time: '2018-12-18',
-						title: [ 'Load more data' ],
-						description: [ 'append event at bottom of timeline' ]
+						headers: {
+							'auth-header': this.props.user.token
+						}
 					}
-				]);
+				);
 
+				const toBeAddDatas = this.convertDataFormat(data.stories);
 				this.setState({
 					waiting: false,
-					data: data
+					offset: this.state.offset + 20,
+					data: toBeAddDatas,
+					isDataRemain: data.isDataRemain
 				});
-			}, 1000);
+			} catch (error) {
+				console.log(error);
+			}
 		}
 	};
 
@@ -136,36 +205,6 @@ export default class TimeLineScreen extends React.Component {
 	};
 
 	renderDetail(rowData, sectionID, rowID) {
-		let title = (
-			<Text
-				style={{
-					fontSize: 16,
-					fontWeight: 'bold'
-				}}
-			>
-				{rowData.title}
-			</Text>
-		);
-		var desc = null;
-		if (rowData.description)
-			desc = (
-				<View
-					style={{
-						flexDirection: 'row',
-						paddingRight: 50
-					}}
-				>
-					<Text
-						style={{
-							marginLeft: 10,
-							color: 'gray'
-						}}
-					>
-						{rowData.description}
-					</Text>
-				</View>
-			);
-
 		return <View style={{ flex: 1 }}>{this.mapToOneDayData(rowData)}</View>;
 	}
 
@@ -182,8 +221,11 @@ export default class TimeLineScreen extends React.Component {
 				<Timeline
 					style={{
 						flex: 1,
+						minHeight: '100%',
 						marginTop: 30,
-						paddingTop: 10
+						paddingTop: 10,
+						paddingBottm: 50,
+						marginBottom: 100
 					}}
 					data={this.state.data}
 					circleSize={20}
@@ -216,3 +258,11 @@ export default class TimeLineScreen extends React.Component {
 		);
 	}
 }
+
+const mapStateToProps = (state) => {
+	return {
+		user: state.user
+	};
+};
+
+export default connect(mapStateToProps)(TimeLineScreen);
