@@ -4,6 +4,7 @@ import moment from 'moment';
 import { View, RefreshControl, ActivityIndicator, Text } from 'react-native';
 import Timeline from 'react-native-timeline-listview';
 import API from '../API';
+import { ScreenTitleWapper, ScreenTitle } from './ReviewListScreen';
 
 let dataFormat = {};
 
@@ -19,43 +20,7 @@ class TimeLineScreen extends React.Component {
 		this.onRefresh = this.onRefresh.bind(this);
 		this.renderDetail = this.renderDetail.bind(this);
 
-		this.data = [
-			{
-				time: '2018-12-20',
-				description: [ 'sdfSDr' ],
-				title: [ 'sdfefsdfsdf' ]
-			},
-			{
-				time: '2018-12-20',
-				description: [ 'sdfSDr' ],
-				title: [ 'sdfefsdfsdf' ]
-			},
-			{
-				time: '2018-12-20',
-				description: [ 'sdfSDr' ],
-				title: [ 'sdfefsdfsdf' ]
-			},
-			{
-				time: '2018-12-20',
-				description: [ 'sdfSDr' ],
-				title: [ 'sdfefsdfsdf' ]
-			},
-			{
-				time: '2018-12-20',
-				description: [ 'sdfSDr' ],
-				title: [ 'sdfefsdfsdf' ]
-			},
-			{
-				time: '2018-12-20',
-				description: [ 'sdfSDr' ],
-				title: [ 'sdfefsdfsdf' ]
-			},
-			{
-				time: '2018-12-20',
-				description: [ 'sdfSDr' ],
-				title: [ 'sdfefsdfsdf' ]
-			}
-		];
+		this.data = [];
 
 		this.state = {
 			isRefreshing: false,
@@ -68,7 +33,6 @@ class TimeLineScreen extends React.Component {
 
 	convertDataFormat = (data) => {
 		for (let item of data) {
-			console.log(item.createdAt);
 			const date = item.createdAt.slice(0, 10);
 			if (!dataFormat[date]) {
 				dataFormat[date] = {};
@@ -92,7 +56,7 @@ class TimeLineScreen extends React.Component {
 			tempDatas.push(format);
 		}
 		dataFormat = {};
-		return this.state.data.concat(tempDatas);
+		return tempDatas;
 	};
 
 	async componentDidMount() {
@@ -148,7 +112,6 @@ class TimeLineScreen extends React.Component {
 	};
 
 	onEndReached = async () => {
-		console.log('on end reach');
 		if (!this.state.isDataRemain) {
 			return;
 		}
@@ -165,7 +128,9 @@ class TimeLineScreen extends React.Component {
 					}
 				);
 
-				const toBeAddDatas = this.convertDataFormat(data.stories);
+				const toBeAddDatas = this.state.data.concat(
+					this.convertDataFormat(data.stories)
+				);
 				this.setState({
 					waiting: false,
 					offset: this.state.offset + 20,
@@ -214,10 +179,13 @@ class TimeLineScreen extends React.Component {
 				style={{
 					flex: 1,
 					padding: 20,
-					paddingTop: 65,
+					paddingTop: 30,
 					backgroundColor: 'white'
 				}}
 			>
+				<ScreenTitleWapper>
+					<ScreenTitle>나의 공부</ScreenTitle>
+				</ScreenTitleWapper>
 				<Timeline
 					style={{
 						flex: 1,

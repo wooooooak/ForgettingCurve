@@ -58,7 +58,6 @@ export default class App extends React.Component {
 	};
 
 	render() {
-		persistor.purge();
 		if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
 			return (
 				<AppLoading
