@@ -37,6 +37,7 @@ export default class App extends React.Component {
 					name: result.user.name,
 					photoUrl: result.user.photoUrl
 				});
+				console.log(data);
 				store.dispatch(
 					login({
 						token: data.token,
@@ -57,7 +58,7 @@ export default class App extends React.Component {
 	};
 
 	render() {
-		// persistor.purge();
+		persistor.purge();
 		if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
 			return (
 				<AppLoading
