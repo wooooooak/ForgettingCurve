@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import {
 	ScreenTitleWapper,
 	ScreenTitle,
-	ScreenPageWrapper,
-	ScrollViewCustom
+	ScreenPageWrapper
 } from './ReviewListScreen';
 
 import { Button } from 'antd-mobile-rn';
@@ -39,12 +38,7 @@ const SubmitButton = styled(Button)`
 	width: 90%;
 	margin: 0 auto;
 	font-size: 20px;
-	font-family: 'noto-sans-kr-bold'
-	/* margin-top: 5px;
-	margin: 5px auto 0px;
-	width: 150px;
-	height: 40px;
-	font-size: 20px; */
+	font-family: 'noto-sans-kr-bold';
 `;
 
 const AInputRange = Animated.createAnimatedComponent(InputRange);
@@ -60,10 +54,7 @@ class TodayStudyScreen extends React.Component {
 		fadeAnimButton: new Animated.Value(0),
 		category: '',
 		range: '',
-		dataList: [
-			{ title: '영어', content: 'chatper 3~4', id: '2134123' },
-			{ title: '수학', content: 'chatper 3~4', id: '2132124' }
-		]
+		dataList: []
 	};
 
 	async componentDidMount() {
@@ -132,7 +123,7 @@ class TodayStudyScreen extends React.Component {
 				content: data.content,
 				id: data.id
 			});
-			console.log(data);
+			console.log(newArr);
 			this.setState({
 				...this.state,
 				category: '',
@@ -144,7 +135,13 @@ class TodayStudyScreen extends React.Component {
 		}
 	};
 	render() {
-		const { fadeAnimRange, fadeAnimButton, category, range } = this.state;
+		const {
+			fadeAnimRange,
+			fadeAnimButton,
+			category,
+			range,
+			dataList
+		} = this.state;
 		return (
 			<ScreenPageWrapper>
 				<ScreenTitleWapper>
@@ -176,7 +173,9 @@ class TodayStudyScreen extends React.Component {
 				) : null}
 				<Divider />
 				<FlatList
-					data={this.state.dataList}
+					enableEmptySections={true}
+					style={{ marginTop: 0 }}
+					data={dataList}
 					renderItem={({ item }) => (
 						<TodayStudy title={item.title} content={item.content}>
 							{item.id}
