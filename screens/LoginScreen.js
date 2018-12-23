@@ -15,7 +15,7 @@ const GoogleLoginButton = styled(Button)`
 	min-width: 80%;
 	margin-top: -100;
 	border-radius: 5px;
-	/* font-family: 'noto-sans-kr-bold'; */
+	font-family: 'noto-sans-kr-bold';
 `;
 
 const LogoContainer = styled(View)`

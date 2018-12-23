@@ -17,7 +17,7 @@ export const ScreenPageWrapper = styled(View)`
 
 export const ScrollViewCustom = styled(ScrollView)`
 	flex: 1;
-	padding-top: 35px;
+	margin-top: 20;
 	background-color: transparent;
 	backface-visibility: hidden;
 `;
@@ -47,7 +47,7 @@ const ReviewCard = styled(Card)`
 	padding-top: 5px;
 	border-radius: 10px;
 	border-color: transparent;
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 `;
 
 const TitleReview = styled.Text`
@@ -131,7 +131,7 @@ class ReviewListScreen extends React.Component {
 				<ScreenTitleWapper>
 					<ScreenTitle>오늘의 복습</ScreenTitle>
 				</ScreenTitleWapper>
-				<ScrollViewCustom>
+				<ScrollViewCustom enableEmptySections={true}>
 					{this.mapDataToState(this.state.dataList).length !== 0 ? (
 						this.mapDataToState(this.state.dataList)
 					) : (

@@ -190,7 +190,7 @@ class TimeLineScreen extends React.Component {
 					style={{
 						flex: 1,
 						minHeight: '100%',
-						marginTop: 30,
+						marginTop: 20,
 						paddingTop: 10,
 						paddingBottm: 50,
 						marginBottom: 100
@@ -199,7 +199,7 @@ class TimeLineScreen extends React.Component {
 					circleSize={20}
 					circleColor="rgb(45,156,219)"
 					lineColor="rgb(45,156,219)"
-					timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
+					timeContainerStyle={{ minWidth: 52 }}
 					timeStyle={{
 						textAlign: 'center',
 						backgroundColor: '#ff9797',
@@ -210,7 +210,6 @@ class TimeLineScreen extends React.Component {
 					// showTime={false}
 					descriptionStyle={{ color: 'gray' }}
 					options={{
-						style: { paddingTop: 5 },
 						refreshControl: (
 							<RefreshControl
 								refreshing={this.state.isRefreshing}
