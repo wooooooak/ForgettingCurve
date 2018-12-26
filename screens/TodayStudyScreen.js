@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { Animated, Text, View, TextInput, FlatList } from 'react-native';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import {
 	ScreenTitleWapper,
 	ScreenTitle,
@@ -59,11 +60,16 @@ class TodayStudyScreen extends React.Component {
 
 	async componentDidMount() {
 		try {
-			const { data } = await API.get(`study/todayStudies`, {
-				headers: {
-					'auth-header': this.props.user.token
+			const {
+				data
+			} = await API.get(
+				`study/todayStudies?time0ffset=${moment().utcOffset()}`,
+				{
+					headers: {
+						'auth-header': this.props.user.token
+					}
 				}
-			});
+			);
 			this.setState({
 				...this.state,
 				dataList: data
@@ -123,7 +129,6 @@ class TodayStudyScreen extends React.Component {
 				content: data.content,
 				id: data.id
 			});
-			console.log(newArr);
 			this.setState({
 				...this.state,
 				category: '',

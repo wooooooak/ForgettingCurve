@@ -1,4 +1,4 @@
-POST http://13.125.192.2:3000/auth/login
+POST http://13.209.5.234:3000/auth/login
 content-type: application/json
 
 {
@@ -21,9 +21,9 @@ auth-header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Indvb29vb29ha0BnbW
 }
 
 ### get TODAY STUDIES
-GET http://13.125.192.2:3000/study/todayStudies
+GET http://13.209.5.234:3000/study/todayStudies
 auth-header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Indvb29vb29ha0BnbWFpbC5jb20iLCJuYW1lIjoiTEVFWkVQIiwicGhvdG9VcmwiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vLTZuNERSay1sS2JrL0FBQUFBQUFBQUFJL0FBQUFBQUFBRzdzL0JGLXo3VFdBWU5JL3Bob3RvLmpwZyIsImlhdCI6MTU0NTE0MTc2MSwiZXhwIjoxNTQ1NzQ2NTYxLCJpc3MiOiJsZWV5b25nanVuIn0.Wg7eeuanCWhjVBPJQ54jJiPADS3zqsDqKIlik9q2WwM
 
 ### get REVEIW STUDIES
-GET http://13.125.192.2:3000/study/reviewStudies
+GET http://13.209.5.234:3000/study/reviewStudies
 auth-header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Indvb29vb29ha0BnbWFpbC5jb20iLCJuYW1lIjoiTEVFWkVQIiwicGhvdG9VcmwiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vLTZuNERSay1sS2JrL0FBQUFBQUFBQUFJL0FBQUFBQUFBRzdzL0JGLXo3VFdBWU5JL3Bob3RvLmpwZyIsImlhdCI6MTU0NTM2NDc1MywiZXhwIjoxNTQ1OTY5NTUzLCJpc3MiOiJsZWV5b25nanVuIn0.p-3CvGcUnbIUrKY7HX4ppOeags_xRac0g944388gbOo

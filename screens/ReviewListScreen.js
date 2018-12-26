@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { ScrollView, View, Text } from 'react-native';
 import styled from 'styled-components/native';
 import { Card } from 'antd-mobile-rn';
@@ -76,6 +77,19 @@ const swipeBtns = [
 		component: (
 			<Ionicons name="md-checkmark-circle" size={32} color="green" />
 		)
+	},
+	{
+		text: 'Done',
+		backgroundColor: 'transparent',
+		underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+		onPress: () => {
+			this.deleteNote(rowData);
+		},
+		component: (
+			<View style={{ height: '100%' }}>
+				<Text>done</Text>
+			</View>
+		)
 	}
 ];
 class ReviewListScreen extends React.Component {
@@ -89,11 +103,16 @@ class ReviewListScreen extends React.Component {
 
 	async componentDidMount() {
 		try {
-			const { data } = await API.get(`study/reviewStudies`, {
-				headers: {
-					'auth-header': this.props.user.token
+			const {
+				data
+			} = await API.get(
+				`study/reviewStudies?timeoffset=${moment().utcOffset()}`,
+				{
+					headers: {
+						'auth-header': this.props.user.token
+					}
 				}
-			});
+			);
 			this.setState({
 				dataList: data
 			});

@@ -10,12 +10,11 @@ import TodayStudyScreen from '../screens/TodayStudyScreen';
 import ReviewListScreen from '../screens/ReviewListScreen';
 import TimeLineScreen from '../screens/TimeLineScreen';
 
-const HomeStack = createStackNavigator({
-	TodayStudy: TodayStudyScreen,
-	TimeLine: TimeLineScreen
+const TodayStudyStack = createStackNavigator({
+	TodayStudy: TodayStudyScreen
 });
 
-HomeStack.navigationOptions = {
+TodayStudyStack.navigationOptions = {
 	tabBarLabel: '오늘의 공부',
 	tabBarIcon: ({ focused }) => (
 		<TabBarIcon
@@ -61,6 +60,6 @@ TimeLineStack.navigationOptions = {
 
 export default createBottomTabNavigator({
 	ReviewListStack,
-	HomeStack,
+	TodayStudyStack,
 	TimeLineStack
 });
