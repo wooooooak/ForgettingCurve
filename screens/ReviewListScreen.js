@@ -8,6 +8,7 @@ import Swipeout from 'react-native-swipeout';
 import { Ionicons } from '@expo/vector-icons';
 
 import API from '../API';
+import FamousSaying from '../components/FamousSaying';
 
 export const ScreenPageWrapper = styled(View)`
 	flex: 1;
@@ -36,6 +37,8 @@ export const ScreenTitle = styled.Text`
 	font-family: 'noto-sans-kr-bold';
 	text-align: center;
 `;
+
+const EmptyNotice = styled.View`padding: 20px;`;
 
 const ReviewCard = styled(Card)`
 	width: 95%;
@@ -154,7 +157,10 @@ class ReviewListScreen extends React.Component {
 					{this.mapDataToState(this.state.dataList).length !== 0 ? (
 						this.mapDataToState(this.state.dataList)
 					) : (
-						<Text>복습할게 없군요?</Text>
+						<EmptyNotice>
+							<Text>복습할게 없군요?</Text>
+							<FamousSaying />
+						</EmptyNotice>
 					)}
 				</ScrollViewCustom>
 			</ScreenPageWrapper>

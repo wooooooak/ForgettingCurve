@@ -103,10 +103,7 @@ class TimeLineScreen extends React.Component {
 			return <ActivityIndicator />;
 		} else {
 			return (
-				<View style={{ backgroundColor: 'black', height: 100 }}>
-					<Text>this is end</Text>
-					<Text>this is end</Text>
-				</View>
+				<View style={{ backgroundColor: 'transparent', height: 100 }} />
 			);
 		}
 	};
