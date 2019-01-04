@@ -100,11 +100,13 @@ class ReviewListScreen extends React.Component {
 	}
 
 	onSwipeOpen = (rowId, sectionId) => {
+		console.log('on swipe open');
 		this.setState({
 			activeRow: rowId
 		});
 	};
-	onSwipeOpen = (rowId, sectionId) => {
+	onSwipeClose = (rowId, sectionId) => {
+		console.log('on swipe close');
 		this.setState({
 			activeRow: null
 		});
@@ -116,7 +118,7 @@ class ReviewListScreen extends React.Component {
 			backgroundColor: 'transparent',
 			underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
 			onPress: () => {
-				this.deleteNote(id);
+				console.log('복습 하루 미루기!');
 			},
 			component: (
 				<Ionicons name="md-checkmark-circle" size={32} color="green" />
@@ -128,7 +130,6 @@ class ReviewListScreen extends React.Component {
 			underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
 			onPress: () => {
 				console.log('delete number is : ' + id);
-				this.deleteNote(id);
 			},
 			component: (
 				<View style={{ height: '100%' }}>
@@ -153,7 +154,7 @@ class ReviewListScreen extends React.Component {
 					}}
 					rowID={el.id}
 					sectionId={el.id}
-					close={this.state.activeRow !== el.id}
+					// close={this.state.activeRow !== el.id}
 					onOpen={(sectionId, rowID) =>
 						this.onSwipeOpen(rowID, sectionId)}
 					onClose={(sectionId, rowID) =>
@@ -170,6 +171,7 @@ class ReviewListScreen extends React.Component {
 	};
 
 	render() {
+		console.log('render : ' + this.state.activeRow);
 		return (
 			<ScreenPageWrapper>
 				<ScreenTitleWapper>
