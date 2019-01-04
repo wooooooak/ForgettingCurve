@@ -9,6 +9,8 @@ import { Ionicons } from '@expo/vector-icons';
 
 import API from '../API';
 import FamousSaying from '../components/FamousSaying';
+import { ELOOP } from 'constants';
+import { CLIENT_RENEG_LIMIT } from 'tls';
 
 export const ScreenPageWrapper = styled(View)`
 	flex: 1;
@@ -100,6 +102,7 @@ const swipeBtns = [
 		backgroundColor: 'transparent',
 		underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
 		onPress: () => {
+			//this.state.activeRow를 찾으면 될 것 같은데..
 			this.deleteNote(rowData);
 		},
 		component: (
@@ -109,13 +112,15 @@ const swipeBtns = [
 		)
 	}
 ];
+
 class ReviewListScreen extends React.Component {
 	static navigationOptions = {
 		header: null
 	};
 
 	state = {
-		dataList: []
+		dataList: [],
+		activeRow: null
 	};
 
 	async componentDidMount() {
@@ -138,9 +143,50 @@ class ReviewListScreen extends React.Component {
 		}
 	}
 
+	onSwipeOpen = (rowId, sectionId) => {
+		this.setState({
+			activeRow: rowId
+		})
+	}
+	onSwipeOpen = (rowId, sectionId) => {
+		this.setState({
+			activeRow: null
+		})
+	}
+
+
+	swipeBtns = (id) => ([
+		{
+			text: 'Done',
+			backgroundColor: 'transparent',
+			underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+			onPress: () => {
+				this.deleteNote(id);
+			},
+			component: (
+				<Ionicons name="md-checkmark-circle" size={32} color="green" />
+			)
+		},
+		{
+			text: 'Done',
+			backgroundColor: 'transparent',
+			underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+			onPress: () => {
+				console.log("delete number is : " + id);
+				this.deleteNote(id);
+			},
+			component: (
+				<View style={{ height: '100%' }}>
+					<Text>done</Text>
+				</View>
+			)
+		}
+	])
+
 	mapDataToState = (dataList) => {
 		return dataList.map((el, index) => {
 			const color = colorPicker[index % 5];
+			
 			return (
 				<Swipeout
 					key={index}
@@ -150,7 +196,12 @@ class ReviewListScreen extends React.Component {
 						marginLeft: 'auto',
 						marginRight: 'auto'
 					}}
-					right={swipeBtns}
+					rowID={el.id}
+					sectionId={el.id}
+					close={(this.state.activeRow !== el.id)}
+					onOpen={(sectionId,rowID) => this.onSwipeOpen(rowID, sectionId)}
+					onClose={(sectionId,rowID) => this.onSwipeClose(rowID, sectionId)}
+					right={this.swipeBtns(el.id)}
 					autoClose={true}
 				>
 					<ReviewCard backgroundColor={color}>
