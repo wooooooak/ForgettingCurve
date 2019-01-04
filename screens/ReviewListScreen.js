@@ -44,37 +44,23 @@ const EmptyNotice = styled.View`padding: 20px;`;
 
 const ReviewCard = styled(Card)`
 	width: 95%;
-	height: 100px;
+	height: 95px;
 	background-color: ${(props) => props.backgroundColor};
 	shadow-offset: 2px;
-	elevation: 5px;
+	elevation: 2px;
 	margin: 0 auto;
-	/* padding-top: 5px; */
 	padding-left: 20px;
-	padding-right: 20px;
+	padding-top: 5px;
 	border-radius: 10px;
 	border-color: transparent;
 	margin-bottom: 15px;
-	display: flex;
 `;
 
 const TitleReview = styled.Text`
-	color: black;
+	color: #f5f6fa;
+	/* text-align: center; */
 	font-family: 'noto-sans-kr';
 	font-size: 18px;
-	flex: 2;
-`;
-
-const ContentText = styled.Text`
-	font-size: 14px;
-	font-family: 'noto-sans-kr';
-	flex: 2;
-`;
-
-const CycleText = styled.Text`
-	font-size: 10px;
-	text-align: right;
-	flex: 1;
 `;
 
 const colorPicker = {
@@ -206,8 +192,6 @@ class ReviewListScreen extends React.Component {
 				>
 					<ReviewCard backgroundColor={color}>
 						<TitleReview>{el.title}</TitleReview>
-						<ContentText>{el.content}</ContentText>
-						<CycleText>{el.cycle}회독 했음</CycleText>
 					</ReviewCard>
 				</Swipeout>
 			);
